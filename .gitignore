@@ -16,6 +16,9 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
+### Intellij Patch ###
+# Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
+
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -27,6 +30,10 @@ out/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+
+# Gradle
+.idea/**/gradle.xml
+.idea/**/libraries
 
 ### NetBeans ###
 /nbproject/private/
@@ -40,3 +47,22 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Java ###
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
