@@ -14,6 +14,7 @@
     <title>게시글 등록</title>
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 <h1>게시글 등록</h1>
 <div>
     <form id="frmRegist" name="frmRegist" method="post" action="/bbs/regist">

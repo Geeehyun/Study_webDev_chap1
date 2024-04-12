@@ -14,6 +14,7 @@
     <title>게시글 수정</title>
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 <h1>게시글 수정</h1>
 <div>
     <form id="frmModify" name="frmModify" method="post" action="/bbs/modify" onsubmit="checkVal(this)">

@@ -1,5 +1,6 @@
 package org.fullstack4.chap1.controller;
 
+import lombok.extern.log4j.Log4j2;
 import org.fullstack4.chap1.dto.BbsDTO;
 import org.fullstack4.chap1.service.BbsService;
 
@@ -9,6 +10,7 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
+@Log4j2
 @WebServlet("/bbs/list")
 public class BbsListController extends HttpServlet {
     @Override
@@ -16,6 +18,10 @@ public class BbsListController extends HttpServlet {
         System.out.println("===================================");
         System.out.println("/bbs/list");
         System.out.println("===================================");
+
+        ServletContext servletContext = req.getServletContext();
+        log.info("appName : " + servletContext.getAttribute("appName"));
+
         List<BbsDTO> dtoList = null;
         try {
             dtoList = BbsService.INSTANCE.bbsList();

@@ -6,6 +6,7 @@ import org.fullstack4.chap1.domain.BbsVO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class BbsDAO {
     }
 
     public List<BbsVO> list() throws Exception {
-        String sql = "SELECT idx, user_id, title, content, display_date, readCnt, reg_date, modify_date" +
+        String sql = "SELECT idx, user_id, title, content, display_date, readCnt, to_char(reg_date, 'YYYY-MM-DD') as 'reg_date', to_char(modify_date, 'YYYY-MM-DD') as 'modify_date'" +
                 " FROM tbl_bbs ORDER BY idx DESC";
         @Cleanup Connection conn = ConnectionUtil.INSTANCE.getConnection();
         @Cleanup PreparedStatement psmt = conn.prepareStatement(sql);
@@ -68,6 +69,8 @@ public class BbsDAO {
                     .content(rs.getString("content"))
                     .display_date(rs.getString("display_date"))
                     .readCnt(rs.getInt("readCnt"))
+                    .reg_date(LocalDate.parse(rs.getString("reg_date")))
+                    .modify_date((rs.getString("modify_date") != null) ? (LocalDate.parse(rs.getString("modify_date"))) : (null))
                     .build();
             bbsList.add(vo);
         }
@@ -76,7 +79,7 @@ public class BbsDAO {
 
     public BbsVO view(int idx) throws Exception {
         BbsVO vo = null;
-        String sql = "SELECT idx, user_id, title, content, display_date, readCnt, reg_date, modify_date" +
+        String sql = "SELECT idx, user_id, title, content, display_date, readCnt, to_char(reg_date, 'YYYY-MM-DD') as 'reg_date', to_char(modify_date, 'YYYY-MM-DD') as 'modify_date'" +
                 " FROM tbl_bbs WHERE idx = ?";
         @Cleanup Connection conn = ConnectionUtil.INSTANCE.getConnection();
         @Cleanup PreparedStatement psmt = conn.prepareStatement(sql);
@@ -91,11 +94,14 @@ public class BbsDAO {
                     .content(rs.getString("content"))
                     .display_date(rs.getString("display_date"))
                     .readCnt(rs.getInt("readCnt"))
-                    .reg_date(rs.getDate("reg_date").toLocalDate())
+                    .reg_date(LocalDate.parse(rs.getString("reg_date")))
+                    .modify_date((rs.getString("modify_date") != null) ? (LocalDate.parse(rs.getString("modify_date"))) : (null))
                     .build();
         }
         return vo;
     }
+
+
 
     public int modify(BbsVO vo) throws Exception {
         int result = 0;

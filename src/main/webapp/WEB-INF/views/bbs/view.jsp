@@ -13,6 +13,7 @@
     <title>게시판 상세</title>
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 <h1>게시글 상세</h1>
 <c:choose>
     <c:when test="${!empty dto}">

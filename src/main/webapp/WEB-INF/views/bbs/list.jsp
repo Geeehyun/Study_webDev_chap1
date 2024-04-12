@@ -13,7 +13,9 @@
     <title>리스트</title>
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 <h1>게시판 리스트</h1>
+<h2>${appName}</h2>
 <ul>
 <c:forEach var="bbsDto" items="${list}">
     <li><a href="/bbs/view?idx=${bbsDto.idx}">${bbsDto}</a></li>
