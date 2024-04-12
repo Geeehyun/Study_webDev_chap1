@@ -16,7 +16,13 @@ public class BbsListController extends HttpServlet {
         System.out.println("===================================");
         System.out.println("/bbs/list");
         System.out.println("===================================");
-        List<BbsDTO> dtoList = BbsService.INSTANCE.bbsList();
+        List<BbsDTO> dtoList = null;
+        try {
+            dtoList = BbsService.INSTANCE.bbsList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         req.setAttribute("list", dtoList);
         req.getRequestDispatcher("/WEB-INF/views/bbs/list.jsp").forward(req,resp);
     }

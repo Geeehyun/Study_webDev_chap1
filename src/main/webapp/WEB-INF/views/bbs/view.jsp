@@ -7,24 +7,35 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ page trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>게시판 상세</title>
 </head>
 <body>
 <h1>게시글 상세</h1>
+<c:choose>
+    <c:when test="${!empty dto}">
+        <div>${dto.idx}</div>
+        <div>${dto.user_id}</div>
+        <div>${dto.title}</div>
+        <div>${dto.content}</div>
+        <div>${dto.display_date}</div>
+        <div>${dto.readCnt}</div>
+        <div>
+            <button type="button" onclick="location.href = '/bbs/list'">리스트</button>
+            <button type="button" onclick="location.href = '/bbs/modify?idx=${dto.idx}'">수정</button>
+            <button type="button" onclick="deleteThis()">삭제</button>
+        </div>
+    </c:when>
+    <c:otherwise>
+        <div>없는 게시글 입니다.</div>
+        <div>
+            <button type="button" onclick="location.href = '/bbs/list'">리스트</button>
+        </div>
+    </c:otherwise>
+</c:choose>
 
-<div>${dto.idx}</div>
-<div>${dto.user_id}</div>
-<div>${dto.title}</div>
-<div>${dto.content}</div>
-<div>${dto.display_date}</div>
-<div>${dto.readCnt}</div>
-<div>
-    <button type="button" onclick="location.href = '/bbs/list'">리스트</button>
-    <button type="button" onclick="location.href = '/bbs/modify?idx=1'">수정</button>
-    <button type="button" onclick="deleteThis()">삭제</button>
-</div>
 <script>
     function deleteThis() {
         let frmEl = document.createElement('form');
@@ -32,7 +43,7 @@
 
         idEl.setAttribute('type', 'hidden');
         idEl.setAttribute('name', 'idx');
-        idEl.setAttribute('value', '1');
+        idEl.setAttribute('value', ${dto.idx});
         frmEl.appendChild(idEl);
         frmEl.setAttribute('action', '/bbs/delete');
         frmEl.setAttribute('method', 'post');

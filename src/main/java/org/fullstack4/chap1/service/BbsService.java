@@ -3,51 +3,55 @@ package org.fullstack4.chap1.service;
 import org.fullstack4.chap1.dao.BbsDAO;
 import org.fullstack4.chap1.domain.BbsVO;
 import org.fullstack4.chap1.dto.BbsDTO;
+import org.fullstack4.chap1.util.MapperUtil;
+import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public enum BbsService {
     INSTANCE;
+     private BbsDAO dao;
+     private ModelMapper modelMapper;
 
-    public List<BbsDTO> bbsList() {
-        List<BbsDTO> bbsDTOS = IntStream.range(0, 10).mapToObj(i -> {
-            BbsDTO dto = new BbsDTO();
-            dto.setIdx(i);
-            dto.setTitle("Bbs Title ... " + i);
-            dto.setContent("Bbs Content ... " + i);
-            dto.setUser_id("testId");
-            dto.setDisplay_date(LocalDate.now().toString());
-            dto.setReadCnt(0);
-            return dto;
-        }).collect(Collectors.toList());
-
-        return bbsDTOS;
+    BbsService() {
+        dao = new BbsDAO();
+        modelMapper = MapperUtil.INSTANCE.getModelMapper();
+    }
+    public List<BbsDTO> bbsList() throws Exception {
+        List<BbsVO> bbsVOList = dao.list();
+        List<BbsDTO> bbsDTOList = bbsVOList.stream()
+                .map(vo -> modelMapper.map(vo, BbsDTO.class))
+                .collect(Collectors.toList());
+        // 원래라면 하나하나 get해서 set 해야하는데 steam 이랑 modelMapper로 간단히 할 수 있음.
+        return bbsDTOList;
     }
 
-    public BbsDTO bbsView(int idx) {
+    public BbsDTO bbsView(int idx) throws Exception {
         BbsDTO dto = new BbsDTO();
-        dto.setIdx(idx);
-        dto.setTitle("Bbs Title ... " + idx);
-        dto.setContent("Bbs Content ... " + idx);
-        dto.setUser_id("testId");
-        dto.setDisplay_date(LocalDate.now().toString());
-        dto.setReadCnt(0);
+        BbsVO bbsVO = dao.view(idx);
+        if (bbsVO != null) {
+            dto = modelMapper.map(bbsVO, BbsDTO.class);
+        } else {
+            dto = null;
+        }
         return dto;
     }
 
-    public void testRegist() throws Exception {
-        BbsDAO dao = new BbsDAO();
-        BbsVO vo = BbsVO.builder()
-                .user_id("test")
-                .title("게시글 타이틀 테스트")
-                .content("게시글 내용 테스트")
-                .display_date(LocalDate.now().toString())
-                .build();
-        // Builder를 이용해 VO에 값을 알아서 넣는 방법
+    public int regist(BbsDTO bbsDTO) throws Exception {
+        BbsVO bbsVO = modelMapper.map(bbsDTO, BbsVO.class);
+        return dao.regist(bbsVO);
+    }
 
-        System.out.println("결과는? " + dao.regist(vo));
+    public int modify(BbsDTO bbsDTO) throws Exception {
+        BbsVO bbsVO = modelMapper.map(bbsDTO, BbsVO.class);
+        return dao.modify(bbsVO);
+    }
+
+    public int delete(int idx) throws Exception {
+        return dao.delete(idx);
     }
 }

@@ -53,7 +53,7 @@ public class BbsDAO {
     }
 
     public List<BbsVO> list() throws Exception {
-        String sql = "SELECT idx, user_id, title, content, display_date, readCnt" +
+        String sql = "SELECT idx, user_id, title, content, display_date, readCnt, reg_date, modify_date" +
                 " FROM tbl_bbs ORDER BY idx DESC";
         @Cleanup Connection conn = ConnectionUtil.INSTANCE.getConnection();
         @Cleanup PreparedStatement psmt = conn.prepareStatement(sql);
@@ -76,7 +76,7 @@ public class BbsDAO {
 
     public BbsVO view(int idx) throws Exception {
         BbsVO vo = null;
-        String sql = "SELECT idx, user_id, title, content, display_date, readCnt, reg_date" +
+        String sql = "SELECT idx, user_id, title, content, display_date, readCnt, reg_date, modify_date" +
                 " FROM tbl_bbs WHERE idx = ?";
         @Cleanup Connection conn = ConnectionUtil.INSTANCE.getConnection();
         @Cleanup PreparedStatement psmt = conn.prepareStatement(sql);
@@ -104,7 +104,6 @@ public class BbsDAO {
                      " , title = ?" +
                      " , content = ?" +
                      " , display_date = ?" +
-                     " , readCnt = ?" +
                      " , modify_date = now()" +
                      " WHERE idx = ?";
 
@@ -114,8 +113,7 @@ public class BbsDAO {
         psmt.setString(2, vo.getTitle());
         psmt.setString(3, vo.getContent());
         psmt.setString(4, vo.getDisplay_date());
-        psmt.setInt(5, vo.getReadCnt());
-        psmt.setInt(6, vo.getIdx());
+        psmt.setInt(5, vo.getIdx());
         result = psmt.executeUpdate();
         return result;
     }

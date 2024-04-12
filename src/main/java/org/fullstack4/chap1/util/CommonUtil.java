@@ -11,6 +11,8 @@ public class CommonUtil {
     public static boolean nullCheck(String str) {
         if (str.equals("")){
             return false;
+        } else if (str.trim().equals("")) {
+            return false;
         }
         return true;
     }
@@ -34,7 +36,7 @@ public class CommonUtil {
             str = parseString(str);
             result = Integer.parseInt(str);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            System.out.println("숫자가 아닌 값 들어옴.");
         }
         return result;
     }

@@ -2,6 +2,7 @@ package org.fullstack4.chap1.controller;
 
 import org.fullstack4.chap1.dto.BbsDTO;
 import org.fullstack4.chap1.service.BbsService;
+import org.fullstack4.chap1.util.CommonUtil;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -15,9 +16,13 @@ public class BbsViewController extends HttpServlet {
         System.out.println("===================================");
         System.out.println("/bbs/view");
         System.out.println("===================================");
-        int idx = Integer.parseInt(req.getParameter("idx"));
-        BbsDTO dto = BbsService.INSTANCE.bbsView(idx);
-        req.setAttribute("dto", dto);
+        try {
+            int idx = CommonUtil.parseInt(req.getParameter("idx"));
+            BbsDTO dto = BbsService.INSTANCE.bbsView(idx);
+            req.setAttribute("dto", dto);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         req.getRequestDispatcher("/WEB-INF/views/bbs/view.jsp").forward(req,resp);
     }
 

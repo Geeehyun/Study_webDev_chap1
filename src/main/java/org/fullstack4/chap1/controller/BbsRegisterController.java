@@ -1,5 +1,9 @@
 package org.fullstack4.chap1.controller;
 
+import org.fullstack4.chap1.dao.BbsDAO;
+import org.fullstack4.chap1.domain.BbsVO;
+import org.fullstack4.chap1.dto.BbsDTO;
+import org.fullstack4.chap1.service.BbsService;
 import org.fullstack4.chap1.util.CommonUtil;
 
 import javax.servlet.*;
@@ -11,9 +15,10 @@ import java.util.Arrays;
 
 @WebServlet("/bbs/regist")
 public class BbsRegisterController extends HttpServlet {
+    private BbsService service = BbsService.INSTANCE;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/bbs/regist.jsp").forward(req,resp);
+        req.getRequestDispatcher("/WEB-INF/views/bbs/regist.jsp").forward(req,resp);
     }
 
     @Override
@@ -21,44 +26,48 @@ public class BbsRegisterController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         boolean check_flag = true;
         String title = CommonUtil.parseString(req.getParameter("title"));
-        String reg_date = CommonUtil.parseString(req.getParameter("reg_date"));
         String content = CommonUtil.parseString(req.getParameter("content"));
-        String[] hobbies = req.getParameterValues("hobbies");
-        String gender = CommonUtil.parseString(req.getParameter("gender"));
-
+        String display_date = CommonUtil.parseString(req.getParameter("display_date"));
+        int readCnt = 0;
         if (!CommonUtil.nullCheck(title)) {
             req.setAttribute("titleNull","null");
             check_flag = false;
         }
-        if (!CommonUtil.nullCheck(reg_date)) {
-            req.setAttribute("reg_dateNull","null");
+        if (!CommonUtil.nullCheck(display_date)) {
+            req.setAttribute("display_dateNull","null");
             check_flag = false;
         }
         if (!CommonUtil.nullCheck(content)) {
             req.setAttribute("contentNull","null");
             check_flag = false;
         }
-        if (!CommonUtil.nullCheck(hobbies)) {
-            req.setAttribute("hobbiesNull","null");
-            check_flag = false;
-        }
-        if (!CommonUtil.nullCheck(gender)) {
-            req.setAttribute("genderNull","null");
-            check_flag = false;
-        }
-
         if(check_flag) {
-            System.out.println("등록완료");
-            resp.sendRedirect("/bbs/list");
+            BbsDTO bbsDTO = BbsDTO.builder()
+                    .user_id("test")
+                    .title(title)
+                    .content(content)
+                    .display_date(display_date)
+                    .readCnt(readCnt)
+                    .build();
+            int result = 0;
+            try {
+                result = service.regist(bbsDTO);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (result > 0) {
+                System.out.println("등록완료");
+                resp.sendRedirect("/bbs/list");
+            } else {
+                System.out.println("등록실패");
+                req.getRequestDispatcher("/WEB-INF/views/bbs/regist.jsp").forward(req, resp);
+            }
         } else {
             System.out.println("등록실패");
             req.setAttribute("title", title);
-            req.setAttribute("reg_date", reg_date);
+            req.setAttribute("display_date", display_date);
             req.setAttribute("content", content);
-            req.setAttribute("hobbies", Arrays.toString(hobbies));
-            req.setAttribute("gender", gender);
-            req.getRequestDispatcher("/WEB-INF/bbs/regist.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/views/bbs/regist.jsp").forward(req, resp);
         }
-        //resp.sendRedirect("/bbs/list");
     }
 }
